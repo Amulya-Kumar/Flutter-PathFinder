@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:pathfinding_app/common/pixel.dart';
 
 void main() => runApp(MyApp());
 
@@ -37,19 +38,30 @@ class _MyHomePageState extends State<MyHomePage> {
       body: Center(
         child: GridView.count(
           physics: NeverScrollableScrollPhysics(),
-          crossAxisCount: (_width/30).round(),
+          crossAxisCount: (_width / 30).round(),
           padding: const EdgeInsets.only(left: 2, right: 2, top: 4),
           children: List.generate(
-            (_width/30).round() * (_height/30).round(),
-            (i) => InkWell(
-              onTap: (){},
-              child: Container(
-                decoration: BoxDecoration(
-                  border: Border.all(color: Colors.grey),
-                  color: i == 100 ? Colors.red : i == 130 ? Colors.green : Colors.white24,
-                ),
-              ),
-            ),
+            (_width / 30).round() * (_height / 30).round(),
+            (i) => i == 100
+                ? Pixel(
+                    isSelected: false,
+                    isEnd: false,
+                    isStart: true,
+                    isFlag: false,
+                  )
+                : i == 130
+                    ? Pixel(
+                        isSelected: false,
+                        isEnd: true,
+                        isStart: false,
+                        isFlag: false,
+                      )
+                    : Pixel(
+                        isSelected: false,
+                        isEnd: false,
+                        isStart: false,
+                        isFlag: false,
+                      ),
           ),
         ),
       ),

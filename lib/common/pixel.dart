@@ -15,21 +15,14 @@ class Pixel extends StatefulWidget {
 class _PixelState extends State<Pixel> {
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: (){
-        setState(() {
-          widget.isSelected = !widget.isSelected;
-        });
-      },
-      child: Container(
-        decoration: BoxDecoration(
-          border: Border.all(color: Colors.grey),
-          color: widget.isStart
-              ? Colors.red
-              : widget.isEnd
-                  ? Colors.green
-                  : widget.isSelected ? Colors.black54 : Colors.white24,
-        ),
+    return Container(
+      decoration: BoxDecoration(
+        border: Border.all(color: Colors.grey),
+        color: widget.isStart
+            ? Colors.red
+            : widget.isEnd
+                ? Colors.green
+                : widget.isSelected ? Colors.black54 : Colors.white24,
       ),
     );
   }

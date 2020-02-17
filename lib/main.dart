@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:pathfinding_app/common/pixel.dart';
-
 void main() => runApp(MyApp());
 
 class MyApp extends StatelessWidget {
@@ -25,44 +24,60 @@ class MyHomePage extends StatefulWidget {
   _MyHomePageState createState() => _MyHomePageState();
 }
 
+void _djikstraAlgorithm(Pixel start) {}
+
+int _width = 37*30;
+int _height = 25*30 - 50;
+var grid = new List.generate((_height~/30).toInt(), (_) => new List<bool>.filled((_width~/ 30).toInt(), false, growable: true));
+var pixelGrid = new List<List<Pixel>>.generate((_height ~/ 30).toInt(), (_) => new List<Pixel>((_width ~/ 30).toInt()));
+
 class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
-    int _width = MediaQuery.of(context).size.width.round();
-    int _height = MediaQuery.of(context).size.height.round() - 50;
+      for (int i = 0; i < (_height~/ 30).toInt(); i++) {
+      for (int j = 0; j < (_width~/ 30).toInt(); j++) {
+        Pixel tempPixel = new Pixel(
+          isStart: (i == 4 && j == 4) ? true : false,
+          isSelected: (i == 4 && j == 4) || (i == 4 && j == 30) ? true : grid[i][j],
+          isEnd: (i == 4 && j == 30) ? true : false,
+          isFlag: false,
+        );
+        pixelGrid[i][j] = tempPixel;
+      }
+    }
+
+    Widget _buildPixelGridItems(BuildContext context, int index) {
+      int x, y = 0;
+      x = (index / (_width ~/ 30).toInt()).floor();
+      y = (index % (_width ~/ 30).toInt()).floor();
+      return GestureDetector(
+        onTap: () {
+          setState(() {
+            grid[x][y] = !grid[x][y];
+          });
+        },
+        child: GridTile(child: pixelGrid[x][y]),
+      );
+    } 
+
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
         title: Text(widget.title),
+        actions: <Widget>[
+          FlatButton(
+              color: Colors.white, onPressed: () {}, child: Text("Visualise"))
+        ],
       ),
       body: Center(
-        child: GridView.count(
+        child: GridView.builder(
           physics: NeverScrollableScrollPhysics(),
-          crossAxisCount: (_width / 30).round(),
-          padding: const EdgeInsets.only(left: 2, right: 2, top: 4),
-          children: List.generate(
-            (_width / 30).round() * (_height / 30).round(),
-            (i) => i == 100
-                ? Pixel(
-                    isSelected: false,
-                    isEnd: false,
-                    isStart: true,
-                    isFlag: false,
-                  )
-                : i == 130
-                    ? Pixel(
-                        isSelected: false,
-                        isEnd: true,
-                        isStart: false,
-                        isFlag: false,
-                      )
-                    : Pixel(
-                        isSelected: false,
-                        isEnd: false,
-                        isStart: false,
-                        isFlag: false,
-                      ),
+          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: (_width ~/ 30).toInt(),
           ),
+          padding: const EdgeInsets.only(left: 2, right: 2, top: 4),
+          itemBuilder: _buildPixelGridItems,
+          itemCount: (_width ~/ 30).toInt() * (_height ~/ 30).toInt(),
         ),
       ),
     );

@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:pathfinding_app/algorithms/a_star.dart';
+import 'package:pathfinding_app/common/pair.dart';
 import 'package:pathfinding_app/common/pixel.dart';
 void main() => runApp(MyApp());
 
@@ -34,7 +36,7 @@ var pixelGrid = new List<List<Pixel>>.generate((_height ~/ 30).toInt(), (_) => n
 class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
-      for (int i = 0; i < (_height~/ 30).toInt(); i++) {
+    for (int i = 0; i < (_height~/ 30).toInt(); i++) {
       for (int j = 0; j < (_width~/ 30).toInt(); j++) {
         Pixel tempPixel = new Pixel(
           isStart: (i == 4 && j == 4) ? true : false,
@@ -58,15 +60,36 @@ class _MyHomePageState extends State<MyHomePage> {
         },
         child: GridTile(child: pixelGrid[x][y]),
       );
-    } 
+    }
+
+    void drawPathOnGrid(List<Pair> path){
+      for(var p in path){
+        setState(() {
+          grid[p.xCord][p.yCord] = true;
+        });
+      }
+    }
+
+    void doAStarSearch(){
+      var src = new Pair(); // Creating Object
+      src.setValue(4, 4);
+
+      var dest = new Pair(); // Creating Object
+      dest.setValue(4, 30);
+      List<Pair> path = new List<Pair>();
+      path = aStarSearch(grid, src, dest);
+      drawPathOnGrid(path);
+    }
 
     return Scaffold(
       appBar: AppBar(
-        elevation: 0,
+        elevation: 0,   
         title: Text(widget.title),
         actions: <Widget>[
           FlatButton(
-              color: Colors.white, onPressed: () {}, child: Text("Visualise"))
+              color: Colors.white, onPressed: () {
+                doAStarSearch();
+              }, child: Text("Visualise"))
         ],
       ),
       body: Center(

@@ -75,7 +75,7 @@ List<Pair> tracePath(List<List<Cell>> cellDetails, Pair dest) {
   return path;
 }
 
-List<Pair> aStarSearch(List<List<bool>> grid, Pair src, Pair dest) {
+Pair aStarSearch(List<List<bool>> grid, Pair src, Pair dest) {
   int rows = grid.length;
   int cols = grid[0].length;
 
@@ -162,7 +162,9 @@ List<Pair> aStarSearch(List<List<bool>> grid, Pair src, Pair dest) {
         print("Destination is found");
         var path = tracePath(cellDetails, dest);
         foundDest = true;
-        return path;
+        var resultPair = new Pair();
+        resultPair.setValue(path, closedList);
+        return resultPair;
       } else if (closedList[i - 1][j] == false &&
           isUnBlocked(grid, i - 1, j) == true) {
         gNew = cellDetails[i][j].gValue + 1.0;
@@ -193,7 +195,9 @@ List<Pair> aStarSearch(List<List<bool>> grid, Pair src, Pair dest) {
         print("Destination is found");
         var path = tracePath(cellDetails, dest);
         foundDest = true;
-        return path;
+        var resultPair = new Pair();
+        resultPair.setValue(path, closedList);
+        return resultPair;
       } else if (closedList[i][j - 1] == false && isUnBlocked(grid, i, j - 1)) {
         gNew = cellDetails[i][j].gValue + 1.0;
         hNew = calculateHValue(i, j - 1, dest);
@@ -223,7 +227,9 @@ List<Pair> aStarSearch(List<List<bool>> grid, Pair src, Pair dest) {
         print("Destination is found");
         var path = tracePath(cellDetails, dest);
         foundDest = true;
-        return path;
+        var resultPair = new Pair();
+        resultPair.setValue(path, closedList);
+        return resultPair;
       } else if (closedList[i + 1][j] == false && isUnBlocked(grid, i + 1, j)) {
         gNew = cellDetails[i][j].gValue + 1.0;
         hNew = calculateHValue(i + 1, j, dest);
@@ -253,7 +259,9 @@ List<Pair> aStarSearch(List<List<bool>> grid, Pair src, Pair dest) {
         print("Destination is found");
         var path = tracePath(cellDetails, dest);
         foundDest = true;
-        return path;
+        var resultPair = new Pair();
+        resultPair.setValue(path, closedList);
+        return resultPair;
       } else if (closedList[i][j + 1] == false && isUnBlocked(grid, i, j + 1)) {
         gNew = cellDetails[i][j].gValue + 1.0;
         hNew = calculateHValue(i, j + 1, dest);

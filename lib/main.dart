@@ -1,7 +1,9 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:pathfinding_app/algorithms/a_star.dart';
 import 'package:pathfinding_app/common/pair.dart';
 import 'package:pathfinding_app/common/pixel.dart';
+
 void main() => runApp(MyApp());
 
 class MyApp extends StatelessWidget {
@@ -26,23 +28,29 @@ class MyHomePage extends StatefulWidget {
   _MyHomePageState createState() => _MyHomePageState();
 }
 
-void _djikstraAlgorithm(Pixel start) {}
-
-int _width = 37*30;
-int _height = 25*30 - 50;
-var grid = new List.generate((_height~/30).toInt(), (_) => new List<bool>.filled((_width~/ 30).toInt(), false, growable: true));
-var pixelGrid = new List<List<Pixel>>.generate((_height ~/ 30).toInt(), (_) => new List<Pixel>((_width ~/ 30).toInt()));
+int _width = 37 * 30;
+int _height = 25 * 30 - 50;
+var grid = new List.generate(
+    (_height ~/ 30).toInt(),
+    (_) =>
+        new List<bool>.filled((_width ~/ 30).toInt(), false, growable: true));
+var gridState = new List.generate((_height ~/ 30).toInt(),
+    (_) => new List<int>.filled((_width ~/ 30).toInt(), 0, growable: true));
+var pixelGrid = new List<List<Pixel>>.generate(
+    (_height ~/ 30).toInt(), (_) => new List<Pixel>((_width ~/ 30).toInt()));
 
 class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
-    for (int i = 0; i < (_height~/ 30).toInt(); i++) {
-      for (int j = 0; j < (_width~/ 30).toInt(); j++) {
+    for (int i = 0; i < (_height ~/ 30).toInt(); i++) {
+      for (int j = 0; j < (_width ~/ 30).toInt(); j++) {
         Pixel tempPixel = new Pixel(
           isStart: (i == 4 && j == 4) ? true : false,
-          isSelected: (i == 4 && j == 4) || (i == 4 && j == 30) ? true : grid[i][j],
+          isSelected:
+              (i == 4 && j == 4) || (i == 4 && j == 30) ? true : grid[i][j],
           isEnd: (i == 4 && j == 30) ? true : false,
           isFlag: false,
+          stateValue: gridState[i][j],
         );
         pixelGrid[i][j] = tempPixel;
       }
@@ -62,34 +70,71 @@ class _MyHomePageState extends State<MyHomePage> {
       );
     }
 
-    void drawPathOnGrid(List<Pair> path){
-      for(var p in path){
-        setState(() {
-          grid[p.xCord][p.yCord] = true;
+    void drawReachedNodes(List<List<bool>> closedList) {
+      for (int i = 0; i < (_height ~/ 30).toInt(); i++) {
+        for (int j = 0; j < (_width ~/ 30).toInt(); j++) {
+          if (gridState[i][j] == 2) {
+            setState(() {
+              gridState[i][j] = 0;
+            });
+          }
+        }
+      }
+      for (int i = 0; i < (_height ~/ 30).toInt(); i++) {
+        for (int j = 0; j < (_width ~/ 30).toInt(); j++) {  
+          if (closedList[i][j] == true) {
+            Timer(const Duration(milliseconds: 100), () {
+              setState(() {
+                gridState[i][j] = 2;
+              });
+            });
+          }
+        }
+      }
+    }
+
+    void drawPathOnGrid(List<Pair> path) {
+      for (int i = 0; i < (_height ~/ 30).toInt(); i++) {
+        for (int j = 0; j < (_width ~/ 30).toInt(); j++) {
+          if (gridState[i][j] == 1) {
+            setState(() {
+              gridState[i][j] = 0;
+            });
+          }
+        }
+      }
+      for (var p in path) {
+        Timer(const Duration(milliseconds: 300), () {
+          setState(() {
+            gridState[p.xCord][p.yCord] = 1;
+          });
         });
       }
     }
 
-    void doAStarSearch(){
+    void doAStarSearch() {
       var src = new Pair(); // Creating Object
       src.setValue(4, 4);
 
       var dest = new Pair(); // Creating Object
       dest.setValue(4, 30);
-      List<Pair> path = new List<Pair>();
-      path = aStarSearch(grid, src, dest);
-      drawPathOnGrid(path);
+      Pair resultPair = new Pair();
+      resultPair = aStarSearch(grid, src, dest);
+      drawReachedNodes(resultPair.yCord);
+      drawPathOnGrid(resultPair.xCord);
     }
 
     return Scaffold(
       appBar: AppBar(
-        elevation: 0,   
+        elevation: 0,
         title: Text(widget.title),
         actions: <Widget>[
           FlatButton(
-              color: Colors.white, onPressed: () {
+              color: Colors.white,
+              onPressed: () {
                 doAStarSearch();
-              }, child: Text("Visualise"))
+              },
+              child: Text("Visualise"))
         ],
       ),
       body: Center(

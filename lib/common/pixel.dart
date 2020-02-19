@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 
 class Pixel extends StatefulWidget {
-  bool isSelected;
+  final bool isSelected;
   final bool isStart;
   final bool isEnd;
   final bool isFlag;
+  final int stateValue;
 
-  Pixel({this.isSelected, this.isStart, this.isEnd, this.isFlag});
+  Pixel({this.isSelected, this.isStart, this.isEnd, this.isFlag, this.stateValue});
 
   @override
   _PixelState createState() => _PixelState();
@@ -15,14 +16,16 @@ class Pixel extends StatefulWidget {
 class _PixelState extends State<Pixel> {
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return AnimatedContainer(
+      duration: Duration(milliseconds: 200),
+      curve: Curves.elasticInOut,
       decoration: BoxDecoration(
-        border: Border.all(color: Colors.grey),
+        border: Border.all(color: Colors.black87,),
         color: widget.isStart
-            ? Colors.red
+            ? Colors.blue
             : widget.isEnd
                 ? Colors.green
-                : widget.isSelected ? Colors.black54 : Colors.white24,
+                : widget.isSelected ? Colors.black54 : widget.stateValue == 1 ? Colors.deepOrange : widget.stateValue == 2 ? Colors.orangeAccent : Colors.white24,
       ),
     );
   }

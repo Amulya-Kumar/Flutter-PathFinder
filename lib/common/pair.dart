@@ -1,10 +1,10 @@
 class Pair {
-  int xCord; // Property
-  int yCord;
+  var xCord; // Property
+  var yCord;
 
   Pair({this.xCord, this.yCord});
 
-  void setValue(int x, int y) {
+  void setValue(var x, var y) {
     this.xCord = x;
     this.yCord = y;
   }

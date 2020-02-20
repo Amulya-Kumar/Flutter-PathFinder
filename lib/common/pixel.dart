@@ -16,9 +16,7 @@ class Pixel extends StatefulWidget {
 class _PixelState extends State<Pixel> {
   @override
   Widget build(BuildContext context) {
-    return AnimatedContainer(
-      duration: Duration(milliseconds: 200),
-      curve: Curves.elasticInOut,
+    return Container(
       decoration: BoxDecoration(
         border: Border.all(color: Colors.black87,),
         color: widget.isStart

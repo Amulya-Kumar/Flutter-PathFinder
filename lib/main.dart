@@ -84,10 +84,8 @@ class _MyHomePageState extends State<MyHomePage> {
       for (int i = 0; i < (_height ~/ 30).toInt(); i++) {
         for (int j = 0; j < (_width ~/ 30).toInt(); j++) {
           if (closedList[i][j] == true) {
-            Timer(const Duration(milliseconds: 100), () {
-              setState(() {
-                gridState[i][j] = 2;
-              });
+            setState(() {
+              gridState[i][j] = 2;
             });
           }
         }

@@ -71,7 +71,7 @@ class _MyHomePageState extends State<MyHomePage> {
       );
     }
 
-    void drawReachedNodes(List<List<bool>> closedList) {
+    void drawReachedNodes(List<List<int>> orderedClosedList) {
       for (int i = 0; i < (_height ~/ 30).toInt(); i++) {
         for (int j = 0; j < (_width ~/ 30).toInt(); j++) {
           if (gridState[i][j] == 2) {
@@ -81,15 +81,19 @@ class _MyHomePageState extends State<MyHomePage> {
           }
         }
       }
-      for (int i = 0; i < (_height ~/ 30).toInt(); i++) {
-        for (int j = 0; j < (_width ~/ 30).toInt(); j++) {
-          if (closedList[i][j] == true) {
-            setState(() {
-              gridState[i][j] = 2;
-            });
+      for(int counter = 1; counter < ((_height ~/ 30).toInt()*(_width ~/ 30).toInt()); counter++){
+        for (int i = 0; i < (_height ~/ 30).toInt(); i++) {
+          for (int j = 0; j < (_width ~/ 30).toInt(); j++) {
+            if(orderedClosedList[i][j] == counter){
+              Timer(const Duration(milliseconds: 300), () {
+                setState(() {
+                  gridState[i][j] = 2;
+                });
+              });
+            }
           }
         }
-      }
+      }      
     }
 
     void drawPathOnGrid(List<Pair> path) {

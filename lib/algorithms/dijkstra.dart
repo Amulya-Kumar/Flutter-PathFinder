@@ -96,6 +96,7 @@ Pair dijkstraSearch(List<List<bool>> grid, Pair src, Pair dest) {
 
   var closedList = new List.generate(
       rows, (_) => new List<bool>.filled(cols, false, growable: true));
+  var orderedClosedList = new List.generate(rows, (_) => new List<int>.filled(cols, 0));
   var cellDetails = new List<List<Cell>>.generate(rows, (i) => new List<Cell>(cols));
 
   int i, j;
@@ -132,8 +133,9 @@ Pair dijkstraSearch(List<List<bool>> grid, Pair src, Pair dest) {
   openList.insert(0, tempFpair);
 
   bool foundDest = false;
-
+  int counter = 0;
   while (openList.isNotEmpty) {
+    counter++;
     Fpair p = new Fpair();
     p = openList[0];
     int currentIndex = 0;
@@ -150,6 +152,7 @@ Pair dijkstraSearch(List<List<bool>> grid, Pair src, Pair dest) {
     j = p.pair.yCord;
 
     closedList[i][j] = true;
+    orderedClosedList[i][j] = counter;
 
     double gNew, hNew, fNew;
     if (isValid(i - 1, j, rows, cols)) {
@@ -160,7 +163,7 @@ Pair dijkstraSearch(List<List<bool>> grid, Pair src, Pair dest) {
         var path = tracePath(cellDetails, dest);
         foundDest = true;
         var resultPair = new Pair();
-        resultPair.setValue(path, closedList);
+        resultPair.setValue(path, orderedClosedList);
         return resultPair;
       } else if (closedList[i - 1][j] == false &&
           isUnBlocked(grid, i - 1, j) == true) {
@@ -193,7 +196,7 @@ Pair dijkstraSearch(List<List<bool>> grid, Pair src, Pair dest) {
         var path = tracePath(cellDetails, dest);
         foundDest = true;
         var resultPair = new Pair();
-        resultPair.setValue(path, closedList);
+        resultPair.setValue(path, orderedClosedList);
         return resultPair;
       } else if (closedList[i][j - 1] == false && isUnBlocked(grid, i, j - 1)) {
         gNew = cellDetails[i][j].gValue + 1.0;
@@ -225,7 +228,7 @@ Pair dijkstraSearch(List<List<bool>> grid, Pair src, Pair dest) {
         var path = tracePath(cellDetails, dest);
         foundDest = true;
         var resultPair = new Pair();
-        resultPair.setValue(path, closedList);
+        resultPair.setValue(path, orderedClosedList);
         return resultPair;
       } else if (closedList[i + 1][j] == false && isUnBlocked(grid, i + 1, j)) {
         gNew = cellDetails[i][j].gValue + 1.0;
@@ -257,7 +260,7 @@ Pair dijkstraSearch(List<List<bool>> grid, Pair src, Pair dest) {
         var path = tracePath(cellDetails, dest);
         foundDest = true;
         var resultPair = new Pair();
-        resultPair.setValue(path, closedList);
+        resultPair.setValue(path, orderedClosedList);
         return resultPair;
       } else if (closedList[i][j + 1] == false && isUnBlocked(grid, i, j + 1)) {
         gNew = cellDetails[i][j].gValue + 1.0;

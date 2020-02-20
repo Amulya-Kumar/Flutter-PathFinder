@@ -16,9 +16,11 @@ class Pixel extends StatefulWidget {
 class _PixelState extends State<Pixel> {
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return AnimatedContainer(
+      duration: Duration(milliseconds: 200),
+      curve: Curves.bounceOut,
       decoration: BoxDecoration(
-        border: Border.all(color: Colors.black87,),
+        border: Border.all(color: Colors.black12, width: 0.02),
         color: widget.isStart
             ? Colors.blue
             : widget.isEnd

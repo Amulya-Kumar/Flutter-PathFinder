@@ -17,7 +17,7 @@ class _PixelState extends State<Pixel> {
   @override
   Widget build(BuildContext context) {
     return AnimatedContainer(
-      duration: Duration(milliseconds: 200),
+      duration: Duration(milliseconds: 5),
       curve: Curves.bounceOut,
       decoration: BoxDecoration(
         border: Border.all(color: Colors.black12, width: 0.02),

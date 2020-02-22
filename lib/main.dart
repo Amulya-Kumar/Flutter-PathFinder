@@ -71,10 +71,19 @@ class _MyHomePageState extends State<MyHomePage> {
       );
     }
 
-    void drawReachedNodes(List<List<int>> orderedClosedList) {
+    void drawReachedNodes(List<List<int>> orderedClosedList) async {
       for (int i = 0; i < (_height ~/ 30).toInt(); i++) {
         for (int j = 0; j < (_width ~/ 30).toInt(); j++) {
           if (gridState[i][j] == 2) {
+            setState(() {
+              gridState[i][j] = 0;
+            });
+          }
+        }
+      }
+      for (int i = 0; i < (_height ~/ 30).toInt(); i++) {
+        for (int j = 0; j < (_width ~/ 30).toInt(); j++) {
+          if (gridState[i][j] == 1) {
             setState(() {
               gridState[i][j] = 0;
             });
@@ -85,7 +94,7 @@ class _MyHomePageState extends State<MyHomePage> {
         for (int i = 0; i < (_height ~/ 30).toInt(); i++) {
           for (int j = 0; j < (_width ~/ 30).toInt(); j++) {
             if(orderedClosedList[i][j] == counter){
-              Timer(const Duration(milliseconds: 300), () {
+              await Future.delayed(const Duration(milliseconds: 5), () {
                 setState(() {
                   gridState[i][j] = 2;
                 });
@@ -96,7 +105,7 @@ class _MyHomePageState extends State<MyHomePage> {
       }      
     }
 
-    void drawPathOnGrid(List<Pair> path) {
+    void drawPathOnGrid(List<Pair> path) async {
       for (int i = 0; i < (_height ~/ 30).toInt(); i++) {
         for (int j = 0; j < (_width ~/ 30).toInt(); j++) {
           if (gridState[i][j] == 1) {
@@ -107,7 +116,7 @@ class _MyHomePageState extends State<MyHomePage> {
         }
       }
       for (var p in path) {
-        Timer(const Duration(milliseconds: 300), () {
+        await Future.delayed(const Duration(milliseconds: 10), () {
           setState(() {
             gridState[p.xCord][p.yCord] = 1;
           });
@@ -115,7 +124,7 @@ class _MyHomePageState extends State<MyHomePage> {
       }
     }
 
-    void doAStarSearch() {
+    void doAStarSearch() async {
       var src = new Pair(); // Creating Object
       src.setValue(4, 4);
 
@@ -123,8 +132,8 @@ class _MyHomePageState extends State<MyHomePage> {
       dest.setValue(4, 30);
       Pair resultPair = new Pair();
       resultPair = aStarSearch(grid, src, dest);
-      drawReachedNodes(resultPair.yCord);
-      drawPathOnGrid(resultPair.xCord);
+      await drawReachedNodes(resultPair.yCord);
+      await drawPathOnGrid(resultPair.xCord);
     }
 
     void refreshState() {
@@ -145,7 +154,7 @@ class _MyHomePageState extends State<MyHomePage> {
       RestartWidget.restartApp(context);
     }
 
-    void doDijkstraSearch() {
+    void doDijkstraSearch() async {
       var src = new Pair(); // Creating Object
       src.setValue(4, 4);
 
@@ -153,8 +162,8 @@ class _MyHomePageState extends State<MyHomePage> {
       dest.setValue(4, 30);
       Pair resultPair = new Pair();
       resultPair = dijkstraSearch(grid, src, dest);
-      drawReachedNodes(resultPair.yCord);
-      drawPathOnGrid(resultPair.xCord);
+      await drawReachedNodes(resultPair.yCord);
+      await drawPathOnGrid(resultPair.xCord);
     }
 
     return Scaffold(
